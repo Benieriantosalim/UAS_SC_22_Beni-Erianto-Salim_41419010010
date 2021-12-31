@@ -6,15 +6,7 @@ const model = require('./sdk/model.js');
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
-const token = '5011240532:AAFdX9tYKMFvOAVHnvln5n-d4abR5fEgKUU';
-var r = express.Router();
-
-// load pre-trained model
-const model = require('./sdk/model.js');
-
-// Bot Setting
-const TelegramBot = require('node-telegram-bot-api');
-const token = '5073546476:AAG4rie_ytVRpRfHLYNLt0cDz_YcjDidZAE'
+const token = '5011240532:AAFdX9tYKMFvOAVHnvln5n-d4abR5fEgKUU'
 const bot = new TelegramBot(token, {polling: true});
 
 state = 0
@@ -25,14 +17,14 @@ bot.onText(/\/start/, (msg) => {
         msg.chat.id,
         `halo selamat datang ! ${msg.chat.first_name}, welcome...\n
         click /predict`
-    );   
+    ); 
+    state = 0;
 });
 // input requires x1 , x2 dan x3
-state = 0;
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `Masukan nilai x1|x2|x3 contohnya 8|8|8`
+        `Masukan nilai x1|x2|x3 contohnya 3|6|9`
     );
     state = 1;
 });
@@ -44,103 +36,36 @@ bot.on('message', (msg) => {
         x2 = s[1]
         x3 = s[2]
         model.predict(
-            [ 
-                parseFloat(s[0]), // string float
+            [
+                parseFloat(s[0]), // string to float
                 parseFloat(s[1]),
                 parseFloat(s[2])
             ]
         ).then((jres)=>{
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y1 yang diprediksi adalah ${jres[0]}`
-            );  
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y2 yang diprediksi adalah ${jres[1]}`
-            );
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y3 yang diprediksi adalah ${jres[2]}`
-            );
+                bot.sendMessage(
+                    msg.chat.id,
+                    `Prediksi jadi y1 adalah ${jres[0]}`
+                );
+                bot.sendMessage(
+                    msg.chat.id,
+                    `Prediksi jadi y2 adalah ${jres[1]}`
+                ); 
+                bot.sendMessage(
+                    msg.chat.id,
+                    `Prediksi jadi y3 adalah ${jres[2]}`
+                );
         })
     }else{
-        state = 0
+        state = 0;
     }
 })
-
 // routers
-r.get('predict/:x1/:x2/:x3', function(req, res, next) {
+r.get('/predict/:x1/:x2/:x3', function(req, res, next) {
     model.predict(
         [
-            parsefloat(req.params.x1),// string float
-            parsefloat(req.params.x2),
-            parsefloat(req.params.x3)
-        ]    
-    ).then((jres)=>{
-        res.json(jres);
-    })
-});
-module.exports = r;'
-const bot = new TelegramBot(token, {polling: true});
-
-state = 0
-// bots
-bot.onText(/\/start/, (msg) => { 
-    console.log(msg)
-    bot.sendMessage(
-        msg.chat.id,
-        `halo selamat datang ! ${msg.chat.first_name}, welcome...\n
-        click /predict`
-    );   
-});
-// input requires x1 , x2 dan x3
-state = 0;
-bot.onText(/\/predict/, (msg) => { 
-    bot.sendMessage(
-        msg.chat.id,
-        `Masukan nilai x1|x2|x3 contohnya 8|8|8`
-    );
-    state = 1;
-});
-
-bot.on('message', (msg) => {
-    if(state == 1){
-        s = msg.text.split("|");
-        x1 = s[0]
-        x2 = s[1]
-        x3 = s[2]
-        model.predict(
-            [ 
-                parseFloat(s[0]), // string float
-                parseFloat(s[1]),
-                parseFloat(s[2])
-            ]
-        ).then((jres)=>{
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y1 yang diprediksi adalah ${jres[0]}`
-            );  
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y2 yang diprediksi adalah ${jres[1]}`
-            );
-            bot.sendmessage(
-                msg.chat.id,
-                `Nilai y3 yang diprediksi adalah ${jres[2]}`
-            );
-        })
-    }else{
-        state = 0
-    }
-})
-
-// routers
-r.get('predict/:x1/:x2/:x3', function(req, res, next) {
-    model.predict(
-        [
-            parsefloat(req.params.x1),// string float
-            parsefloat(req.params.x2),
-            parsefloat(req.params.x3)
+            parseFloat(req.params.x1),// string float
+            parseFloat(req.params.x2),
+            parseFloat(req.params.x3)
         ]    
     ).then((jres)=>{
         res.json(jres);
