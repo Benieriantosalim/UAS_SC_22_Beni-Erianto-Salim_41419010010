@@ -6,7 +6,7 @@ const model = require('./sdk/model.js');
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
-const token = 'var express = require('express');
+const token = '5011240532:AAFdX9tYKMFvOAVHnvln5n-d4abR5fEgKUU';
 var r = express.Router();
 
 // load pre-trained model
